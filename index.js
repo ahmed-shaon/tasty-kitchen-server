@@ -1,11 +1,60 @@
 const express = require('express');
-const cors = require('cores');
+const cors = require('cors');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
+require('dotenv').config();
+
 const app = express();
 const port = process.env.PORT || 5000;
 
 //middle wares 
 app.use(cors());
 app.use(express.json());
+
+
+
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.4dokkij.mongodb.net/?retryWrites=true&w=majority`;
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
+async function run(){
+    try{
+       const menuCollection = client.db("tastyKitchen").collection("menu");
+       const reviewCollection = client.db("tastyKitchen").collection("reviews");
+
+        app.get('/menu',async (req, res) => {
+            const query = {};
+            let menu;
+            const cursore = menuCollection.find(query);
+            console.log(menu);
+            if(req.query.home)
+            {
+                menu = await cursore.limit(3).toArray();
+            }
+            else{
+                menu = await cursore.toArray();
+            }
+            res.send(menu);
+        })
+
+        app.get('/menu/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {_id:ObjectId(id)}
+            const item =await menuCollection.findOne(query);
+            res.send(item);
+        })
+
+        app.get('/reviews', async(req, res) => {
+            const query = {};
+            const cursore = reviewCollection.find(query);
+            const reviews = await cursore.toArray();
+            res.send(reviews);
+        })
+
+    }
+    finally{
+
+    }
+}
+run().catch(err => console.log(err))
 
 
 //main route
