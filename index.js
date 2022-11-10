@@ -23,7 +23,7 @@ async function run(){
         app.get('/menu',async (req, res) => {
             const query = {};
             let menu;
-            const cursore = menuCollection.find(query);
+            const cursore = menuCollection.find(query).sort({_id:-1});
             console.log(menu);
             if(req.query.home)
             {
@@ -53,7 +53,7 @@ async function run(){
             {
                 query= {email:req.query.email}
             }
-            const cursore = reviewCollection.find(query);
+            const cursore = reviewCollection.find(query).sort({date:1});
             const reviews = await cursore.toArray();
             res.send(reviews);
         })
