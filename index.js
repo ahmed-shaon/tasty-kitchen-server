@@ -64,6 +64,13 @@ async function run(){
             res.send(result);
         })
 
+        app.post('/menu', async (req, res) => {
+            const item = req.body;
+            console.log(item);
+            const result = await menuCollection.insertOne(item);
+            res.send(result);
+        })
+
         app.put('/reviews/:id', async (req,res) => {
             const id= req.params.id;
             const review = req.body;
@@ -76,6 +83,13 @@ async function run(){
                 }
             }
             const result = await reviewCollection.updateOne(filter, doc, option)
+            res.send(result);
+        })
+
+        app.delete('/reviews/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = {_id:ObjectId(id)};
+            const result = await reviewCollection.deleteOne(query);
             res.send(result);
         })
 
