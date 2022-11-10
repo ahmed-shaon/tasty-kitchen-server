@@ -60,7 +60,6 @@ async function run() {
 
         app.get('/reviewsbyid', async (req, res) => {
             const id = req.query.id;
-            console.log(id);
             const query = { itemId: id };
             const cursore = reviewCollection.find(query).sort({ date: 1 });
             const reviews = await cursore.toArray();
