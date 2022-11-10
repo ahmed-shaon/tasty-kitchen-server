@@ -64,6 +64,21 @@ async function run(){
             res.send(result);
         })
 
+        app.put('/reviews/:id', async (req,res) => {
+            const id= req.params.id;
+            const review = req.body;
+            const  filter = {_id:ObjectId(id)};
+            const option= {upsert:true};
+            const doc={
+                $set:{
+                    rating:review.rating,
+                    message:review.message
+                }
+            }
+            const result = await reviewCollection.updateOne(filter, doc, option)
+            res.send(result);
+        })
+
     }
     finally{
 
